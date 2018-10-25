@@ -1,0 +1,37 @@
+{
+  "name": "voicecode/mailcamp-php",
+  "type": "library",
+  "description": "Mailcamp PHP library",
+  "keywords": [
+    "Voicecode", "Mailcamp", "PHP"
+  ],
+  "homepage": "https://voicecode.nl",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Voicecode B.V.",
+      "homepage": "https://voicecode.nl",
+      "email": "info@voicecode.nl"
+    }
+  ],
+  "require": {
+    "php": "^7.1.0",
+    "guzzlehttp/guzzle": "~6.0"
+  },
+  "require-dev": {
+    "symfony/dotenv": "^4.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Voicecode\\Mailcamp\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Voicecode\\Mailcamp\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
