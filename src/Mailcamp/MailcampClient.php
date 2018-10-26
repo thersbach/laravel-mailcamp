@@ -11,7 +11,7 @@ class MailcampClient
     private $token;
 
     /**
-     * @param Client $client
+     * @param Client $connection
      * @param string $username
      * @param string $token
      */
