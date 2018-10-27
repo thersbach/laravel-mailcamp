@@ -1,5 +1,5 @@
 {
-  "name": "voicecode/mailcamp-php",
+  "name": "voicecode/laravel-mailcamp-php",
   "type": "library",
   "description": "Laravel Mailcamp PHP library",
   "keywords": [
