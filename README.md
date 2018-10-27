@@ -1,1 +1,1 @@
-# Mailcamp PHP Library
+# Laravel Mailcamp PHP Library
