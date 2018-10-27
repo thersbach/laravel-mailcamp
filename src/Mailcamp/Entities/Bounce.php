@@ -2,7 +2,7 @@
 
 namespace Voicecode\Mailcamp\Entities;
 
-class CustomFields
+class Bounce extends Mailcamp
 {
     // There is some work to be done here.
 }

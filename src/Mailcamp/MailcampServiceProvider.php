@@ -16,7 +16,7 @@ class MailcampServiceProvider extends ServiceProvider
     {
         // Publish configuration file.
         $this->publishes([
-            __DIR__.'../config/mailcamp.php' => config_path('mailcamp.php'),
+            __DIR__.'/../../config/mailcamp.php' => config_path('mailcamp.php'),
         ]);
     }
 

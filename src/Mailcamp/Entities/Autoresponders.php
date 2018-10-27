@@ -2,6 +2,9 @@
 
 namespace Voicecode\Mailcamp\Entities;
 
-class Autoresponders
+use Voicecode\Mailcamp\Mailcamp;
+
+class Autoresponders extends Mailcamp
 {
+    // There is some work to be done here.
 }

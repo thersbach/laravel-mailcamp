@@ -1,9 +1,9 @@
 {
   "name": "voicecode/mailcamp-php",
   "type": "library",
-  "description": "Mailcamp PHP library",
+  "description": "Laravel Mailcamp PHP library",
   "keywords": [
-    "Voicecode", "Mailcamp", "PHP"
+    "Voicecode", "Laravel", "Mailcamp", "PHP"
   ],
   "homepage": "https://voicecode.nl",
   "license": "MIT",
@@ -15,8 +15,7 @@
     }
   ],
   "require": {
-    "php": "^7.1.0",
-    "guzzlehttp/guzzle": "~6.0"
+    "php": "^7.1.0"
   },
   "require-dev": {
     "symfony/dotenv": "^4.1"
