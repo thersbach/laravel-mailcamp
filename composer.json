@@ -37,7 +37,12 @@
     "laravel": {
         "providers": [
             "Voicecode\\Mailcamp\\MailcampServiceProvider"
-        ]
+        ],
+        "aliases": {
+            "Mailcamp": "Voicecode\\Mailcamp\\MailcampFacade"
+        }
     }
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

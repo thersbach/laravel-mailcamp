@@ -17,27 +17,18 @@ use Voicecode\Mailcamp\Entities\Autoresponders;
 
 class Mailcamp
 {
-    private $endpoint;
-    private $username;
-    private $token;
-    private $result;
+    protected $config;
+    protected $result;
     public $xml;
 
     /**
      * Set connection data.
-     *
-     * @param string $endpoint  The endpoint of the Mailcamp API
-     * @param string $username  The username
-     * @param string $token     The token provided by Mailcamp.
-     *
      */
     public function __construct()
-    {
-        // Set connection data.
-        $this->endpoint = config('mailcamp.endpoint');
-        $this->username = config('mailcamp.username');
-        $this->token = config('mailcamp.token');
-        
+    {        
+        // Validate config variables.
+        $this->validateConfig();
+
         // Set default result object.
         $this->result = new \stdClass();
         $this->result->status = false;
@@ -55,8 +46,8 @@ class Mailcamp
     {
         return '
         <xmlrequest>
-            <username>'.$this->username.'</username>
-            <usertoken>'.$this->token.'</usertoken>
+            <username>'.$this->config->username.'</username>
+            <usertoken>'.$this->config->token.'</usertoken>
             <requesttype>'.$type.'</requesttype>
             <requestmethod>'.$method.'</requestmethod>
             <details>
@@ -194,7 +185,7 @@ class Mailcamp
     {
         // Build the request.
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->endpoint);
+        curl_setopt($ch, CURLOPT_URL, $this->config->endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -207,7 +198,7 @@ class Mailcamp
 
         // Execute the request.
         $response = curl_exec($ch);
-        
+
         // Check for errors.
         if (curl_errno($ch) > 0) {
             $this->result->status = false;
@@ -229,5 +220,32 @@ class Mailcamp
         }
 
         return $this->result;
+    }
+
+    /**
+     * Check if all config variables are available.
+     */
+    private function validateConfig() 
+    {        
+        // Throw error when username is missing from the config files.
+        if(!config('mailcamp.username')) {
+            throw new MailcampException('No username is specified for connecting with Mailcamp.');
+        }
+
+        // Throw error when token is missing from the config files.
+        if(!config('mailcamp.token')) {
+            throw new MailcampException('No token is specified for connecting with Mailcamp.');
+        }
+        
+        // Throw error when endpoint is missing from the config files.
+        if(!config('mailcamp.endpoint')) {
+            throw new MailcampException('No endpoint is specified for connecting with Mailcamp.');
+        }
+
+        // Set connection details.
+        $this->config = new \stdClass();
+        $this->config->username = config('mailcamp.username');
+        $this->config->token = config('mailcamp.token');
+        $this->config->endpoint = config('mailcamp.endpoint');
     }
 }
