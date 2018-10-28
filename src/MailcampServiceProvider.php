@@ -11,7 +11,7 @@ class MailcampServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-    // protected $defer = false;
+    protected $defer = false;
 
     /**
      * Bootstrap the application services.
@@ -34,11 +34,6 @@ class MailcampServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // $this->app->singleton(Mailcamp::class, function () {
-        //     $config = new MailcampConfig();
-        //     return new Mailcamp($config);
-        // });
-
-        // $this->app->alias(Mailcamp::class, 'mailcamp');
+        //
     }
 }
