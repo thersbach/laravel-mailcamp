@@ -32,7 +32,7 @@ class Mailcamp
         // Set default result object.
         $this->result = new \stdClass();
         $this->result->status = false;
-        $this->result->data   = '';
+        $this->result->data = '';
     }
 
     /**
