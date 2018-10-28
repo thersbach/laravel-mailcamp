@@ -7,14 +7,21 @@ use Voicecode\Mailcamp\Mailcamp;
 class Token extends Mailcamp
 {
     /**
+     * Set request type
+     *
+     * @var string
+     */
+    private $requestType = 'authentication';
+
+    /**
      * Check the provided user token.
      */
     public function check()
     {
-        // Generate XML request body.
-        $this->xml = $this->generateXML('authentication', 'xmlapitest');
+        // Setup request details.
+        $details = '';
 
         // Make request.
-        return $this->request($this->xml);
+        return $this->request($this->requestType, 'xmlapitest', $details);
     }
 }
