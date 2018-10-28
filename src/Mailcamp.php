@@ -19,7 +19,7 @@ class Mailcamp
 {
     protected $config;
     protected $result;
-    public $xml;
+    protected $xml;
 
     /**
      * Set connection data.
@@ -31,29 +31,6 @@ class Mailcamp
 
         // Set default result object.
         $this->result = new \stdClass();
-        $this->result->status = false;
-        $this->result->data = '';
-    }
-
-    /**
-     * Generate the XML request body.
-     *
-     * @param string $type      The request type.
-     * @param string $method    The request method.
-     * @param string $details   The optional details for the request.
-     */
-    protected function generateXML($type, $method, $details = '')
-    {
-        return '
-        <xmlrequest>
-            <username>'.$this->config->username.'</username>
-            <usertoken>'.$this->config->token.'</usertoken>
-            <requesttype>'.$type.'</requesttype>
-            <requestmethod>'.$method.'</requestmethod>
-            <details>
-            '.$details.'
-            </details>
-        </xmlrequest>';
     }
 
     /**
@@ -181,8 +158,12 @@ class Mailcamp
      *
      * @param string $xml The generated XML body for the request.
      */
-    public function request()
+    public function request($type, $method, $details)
     {
+
+        // Generate XML body.
+        $this->xml = $this->generateXML($type, $method, $details);
+
         // Build the request.
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->config->endpoint);
@@ -218,8 +199,29 @@ class Mailcamp
                 }
             }
         }
-
+        
         return $this->result;
+    }
+
+    /**
+     * Generate the XML request body.
+     *
+     * @param string $type      The request type.
+     * @param string $method    The request method.
+     * @param string $details   The optional details for the request.
+     */
+    protected function generateXML($type, $method, $details)
+    {
+        return '
+        <xmlrequest>
+            <username>'.$this->config->username.'</username>
+            <usertoken>'.$this->config->token.'</usertoken>
+            <requesttype>'.$type.'</requesttype>
+            <requestmethod>'.$method.'</requestmethod>
+            <details>
+            '.$details.'
+            </details>
+        </xmlrequest>';
     }
 
     /**

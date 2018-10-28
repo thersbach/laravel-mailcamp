@@ -31,11 +31,8 @@ class Subscribers extends Mailcamp
             <return_listid />
         ';
 
-        // Generate XML request body.
-        $this->xml = $this->generateXML($this->requestType, 'IsSubscriberOnList', $details);
-
         // Make request.
-        return $this->request($this->xml);
+        return $this->request($this->requestType, 'IsSubscriberOnList', $details);
     }
 
     /**
@@ -57,11 +54,8 @@ class Subscribers extends Mailcamp
             <format>'.$format.'</format>
         ';
 
-        // Generate XML request body.
-        $this->xml = $this->generateXML($this->requestType, 'AddSubscriberToList', $details);
-
         // Make request.
-        return $this->request($this->xml);
+        return $this->request($this->requestType, 'AddSubscriberToList', $details);
     }
 
     /**
@@ -78,11 +72,8 @@ class Subscribers extends Mailcamp
             <emailaddress>'.$email.'</emailaddress>
         ';
 
-        // Generate XML request body.
-        $this->xml = $this->generateXML($this->requestType, 'UpdateEmailAddress', $details);
-
         // Make request.
-        return $this->request($this->xml);
+        return $this->request($this->requestType, 'UpdateEmailAddress', $details);
     }
 
     /**
@@ -101,10 +92,25 @@ class Subscribers extends Mailcamp
             <subscriberid />
         ';
 
-        // Generate XML request body.
-        $this->xml = $this->generateXML($this->requestType, 'DeleteSubscriber', $details);
+        // Make request.
+        return $this->request($this->requestType, 'DeleteSubscriber', $details);
+    }
+
+    /**
+     * Add a subscriber to the suppression list.
+     *
+     * @param string    $email      The email address of the subscriber
+     * @param int       $listID     The ID of the mailing list.
+     */
+    public function suppress($email, $listID)
+    {
+        // Setup request details.
+        $details = '
+            <emailaddress>'.$email.'</emailaddress>
+            <listid>'.$listID.'</listid>
+        ';
 
         // Make request.
-        return $this->request($this->xml);
+        return $this->request($this->requestType, 'AddBannedSubscriber', $details);
     }
 }
