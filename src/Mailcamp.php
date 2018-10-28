@@ -160,7 +160,6 @@ class Mailcamp
      */
     public function request($type, $method, $details)
     {
-
         // Generate XML body.
         $this->xml = $this->generateXML($type, $method, $details);
 
@@ -200,7 +199,7 @@ class Mailcamp
             }
         }
         
-        return $this->result;
+        return $this->parseResponse($this->result);
     }
 
     /**
@@ -224,6 +223,19 @@ class Mailcamp
         </xmlrequest>';
     }
 
+    protected function parseResponse($response)
+    {
+        // Convert array into object.
+        $response = json_decode(json_encode((object) $response), FALSE);
+
+        // Throw an error when a request has failed.
+        if(!$response->status) {
+            throw new MailcampException('Mailcamp API error: '.$response->errormessage);
+        }
+
+        return $response;
+    }
+
     /**
      * Check if all config variables are available.
      */
@@ -231,17 +243,17 @@ class Mailcamp
     {        
         // Throw error when username is missing from the config files.
         if(!config('mailcamp.username')) {
-            throw new MailcampException('No username is specified for connecting with Mailcamp.');
+            throw new MailcampException('Mailcamp API error: No username is specified for connecting with Mailcamp.');
         }
 
         // Throw error when token is missing from the config files.
         if(!config('mailcamp.token')) {
-            throw new MailcampException('No token is specified for connecting with Mailcamp.');
+            throw new MailcampException('Mailcamp API error: No token is specified for connecting with Mailcamp.');
         }
         
         // Throw error when endpoint is missing from the config files.
         if(!config('mailcamp.endpoint')) {
-            throw new MailcampException('No endpoint is specified for connecting with Mailcamp.');
+            throw new MailcampException('Mailcamp API error: No endpoint is specified for connecting with Mailcamp.');
         }
 
         // Set connection details.
