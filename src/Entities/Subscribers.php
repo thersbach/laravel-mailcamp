@@ -83,7 +83,7 @@ class Subscribers extends Mailcamp
      * @param int       $listID     The ID of the mailing list.
      *
      */
-    public function delete($email, $listID)
+    public function unsubscribe($email, $listID)
     {
         // Setup request details.
         $details = '
