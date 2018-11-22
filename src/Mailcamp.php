@@ -25,7 +25,7 @@ class Mailcamp
      * Set connection data.
      */
     public function __construct()
-    {        
+    {
         // Validate config variables.
         $this->validateConfig();
 
@@ -185,7 +185,7 @@ class Mailcamp
             $this->result->data = curl_error($ch);
         } else {
             $result = @simplexml_load_string($response);
-
+            
             if ($result) {
                 if (isset($result->data)) {
                     $this->result->status = true;
@@ -226,11 +226,15 @@ class Mailcamp
     protected function parseResponse($response)
     {
         // Convert array into object.
-        $response = json_decode(json_encode((object) $response), FALSE);
+        $response = json_decode(json_encode((object) $response), false);
 
         // Throw an error when a request has failed.
-        if(!$response->status) {
-            throw new MailcampException('Mailcamp API error: '.$response->errormessage);
+        if ($response->status === false) {
+            if (is_string($response->errormessage)) {
+                throw new MailcampException($response->errormessage);
+            }
+            
+            throw new MailcampException('Received an unknown or empty error response from Mailcamp.');
         }
 
         return $response;
@@ -239,20 +243,20 @@ class Mailcamp
     /**
      * Check if all config variables are available.
      */
-    private function validateConfig() 
-    {        
+    private function validateConfig()
+    {
         // Throw error when username is missing from the config files.
-        if(!config('mailcamp.username')) {
+        if (!config('mailcamp.username')) {
             throw new MailcampException('Mailcamp API error: No username is specified for connecting with Mailcamp.');
         }
 
         // Throw error when token is missing from the config files.
-        if(!config('mailcamp.token')) {
+        if (!config('mailcamp.token')) {
             throw new MailcampException('Mailcamp API error: No token is specified for connecting with Mailcamp.');
         }
         
         // Throw error when endpoint is missing from the config files.
-        if(!config('mailcamp.endpoint')) {
+        if (!config('mailcamp.endpoint')) {
             throw new MailcampException('Mailcamp API error: No endpoint is specified for connecting with Mailcamp.');
         }
 

@@ -5,7 +5,7 @@ $mailcamp = new Voicecode\Mailcamp\Mailcamp();
 
 /**
  * Get all available mailing lists.
- * 
+ *
  * @param int $start    Start of the query results (default: 0)
  * @param int $perPage  The number of results (default: 500)
  */
@@ -20,7 +20,7 @@ $mailcamp->lists()->details($listID);
 
 /**
  * Get statistics.
- * 
+ *
  * @param int $statsID          The ID of the stats you want to get
  * @param string $statsType     The type of stats you want to get (n = Newsletter, a = Autoresponder, Default = n)
  */
@@ -45,7 +45,7 @@ $mailcamp->subscribers()->isSubscribed($email, $listID);
 $mailcamp->subscribers()->subscribe($email, $listID);
 
 /**
- * Remove a contact from a mailing list.
+ * Update a contact of a mailing list.
  *
  * @param int       $id         The ID of the subscriber.
  * @param string    $email      The email address of the subscriber.
@@ -66,4 +66,3 @@ $mailcamp->subscribers()->delete($email, $listID);
  * Check if the username and token are valid.
  */
 $mailcamp->token()->check();
-
