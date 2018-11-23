@@ -156,9 +156,12 @@ class Mailcamp
     /**
      * Make a request to the Mailcamp API.
      *
-     * @param string $xml The generated XML body for the request.
+     * @param string $type              The request type.
+     * @param string $method            The method of the request.
+     * @param string $details           The XML body of the request.
+     * @param boolean $defaultParser    In some cases an alternate response parser would be necessary.
      */
-    public function request($type, $method, $details)
+    public function request($type, $method, $details, $defaultParser = true)
     {
         // Generate XML body.
         $this->xml = $this->generateXML($type, $method, $details);
@@ -198,8 +201,14 @@ class Mailcamp
                 }
             }
         }
-        
-        return $this->parseResponse($this->result);
+
+        // When the normal response parser should be used.
+        if ($defaultParser) {
+            return $this->parseResponse($this->result);
+        }
+
+        // In some cases, a different response parser should be used.
+        return $this->parseAlternateResponse($this->result);
     }
 
     /**
@@ -222,7 +231,14 @@ class Mailcamp
             </details>
         </xmlrequest>';
     }
-
+    
+    /**
+     * Default response parser.
+     *
+     * @param array $response  The response returned after an API call.
+     *
+     * @return object
+     */
     protected function parseResponse($response)
     {
         // Convert array into object.
@@ -238,6 +254,29 @@ class Mailcamp
         }
 
         return $response;
+    }
+
+    /**
+     * Alternate response parser.
+     *
+     * This response parser is used for parsing the response of the isSubscribed API call.
+     * The response would return "FAILED" when a email address is not subscribed to a certain mailing list.
+     *
+     * @param array $response  The response returned after an API call.
+     *
+     * @return boolean
+     */
+    protected function parseAlternateResponse($response)
+    {
+        // Convert array into object.
+        $response = json_decode(json_encode((object) $response), false);
+
+        // When an emailaddress is not yet subscribed.
+        if ($response->status === 'FAILED') {
+            return false;
+        }
+
+        return true;
     }
 
     /**

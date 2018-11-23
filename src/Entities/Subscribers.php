@@ -32,7 +32,7 @@ class Subscribers extends Mailcamp
         ';
 
         // Make request.
-        return $this->request($this->requestType, 'IsSubscriberOnList', $details);
+        return $this->request($this->requestType, 'IsSubscriberOnList', $details, false);
     }
 
     /**
