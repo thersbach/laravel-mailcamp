@@ -18,6 +18,8 @@ class Subscribers extends Mailcamp
      *
      * @param string    $email      The email address of the subscriber.
      * @param int       $listID     The ID of the mailing list.
+     *
+     * @return boolean
      */
     public function isSubscribed($email, $listID)
     {
@@ -43,19 +45,44 @@ class Subscribers extends Mailcamp
      */
     public function subscribe($email, $listID, $confirmed = true, $format = 'html')
     {
-        // Check if the email address has already been added to this list.
-        $this->isSubscribed($email, $listID);
-                
-        // Setup request details.
-        $details = '
-            <emailaddress>'.$email.'</emailaddress>
-            <mailinglist>'.$listID.'</mailinglist>
-            <confirmed>'.$confirmed.'</confirmed>
-            <format>'.$format.'</format>
-        ';
+        // When the user is not subscribed yet.
+        if (!$this->isSubscribed($email, $listID)) {
+                        
+            // Setup request details.
+            $details = '
+                <emailaddress>'.$email.'</emailaddress>
+                <mailinglist>'.$listID.'</mailinglist>
+                <confirmed>'.$confirmed.'</confirmed>
+                <format>'.$format.'</format>
+            ';
 
-        // Make request.
-        return $this->request($this->requestType, 'AddSubscriberToList', $details);
+            // Make request.
+            return $this->request($this->requestType, 'AddSubscriberToList', $details);
+        }
+    }
+
+    /**
+     * Remove a contact from a mailing list.
+     *
+     * @param string    $email      The email address of the subscriber
+     * @param int       $listID     The ID of the mailing list.
+     *
+     */
+    public function unsubscribe($email, $listID)
+    {
+        // When the user is subscribed.
+        if ($this->isSubscribed($email, $listID)) {
+
+            // Setup request details.
+            $details = '
+                <emailaddress>'.$email.'</emailaddress>
+                <listid>'.$listID.'</listid>
+                <subscriberid />
+            ';
+
+            // Make request.
+            return $this->request($this->requestType, 'DeleteSubscriber', $details);
+        }
     }
 
     /**
@@ -74,26 +101,6 @@ class Subscribers extends Mailcamp
 
         // Make request.
         return $this->request($this->requestType, 'UpdateEmailAddress', $details);
-    }
-
-    /**
-     * Remove a contact from a mailing list.
-     *
-     * @param string    $email      The email address of the subscriber
-     * @param int       $listID     The ID of the mailing list.
-     *
-     */
-    public function unsubscribe($email, $listID)
-    {
-        // Setup request details.
-        $details = '
-            <emailaddress>'.$email.'</emailaddress>
-            <listid>'.$listID.'</listid>
-            <subscriberid />
-        ';
-
-        // Make request.
-        return $this->request($this->requestType, 'DeleteSubscriber', $details);
     }
 
     /**

@@ -184,24 +184,34 @@ class Mailcamp
 
         // Check for errors.
         if (curl_errno($ch) > 0) {
-            $this->result->status = false;
+            $this->result->success = false;
+            $this->result->status = 'FAILED';
             $this->result->data = curl_error($ch);
         } else {
             $result = @simplexml_load_string($response);
             
             if ($result) {
-                if (isset($result->data)) {
-                    $this->result->status = true;
-                    $this->result->data = $result->data;
+                // When response from isSubscribed.
+                if ($result->status == 'FAILED') {
+                    $this->result->success = true;
+                    $this->result->status = 'FAILED';
+                    $this->result->errormessage = (string) $result->errormessage;
                 }
-
-                if (isset($result->errormessage)) {
-                    $this->result->status = false;
-                    $this->result->errormessage = $result->errormessage;
+                // When data has been sent.
+                elseif (isset($result->data)) {
+                    $this->result->success = true;
+                    $this->result->status = $result->data->status;
+                    $this->result->data = (string) $result->data;
+                }
+                // Else
+                if ($result->status != 'FAILED' && isset($result->errormessage)) {
+                    $this->result->success = false;
+                    $this->result->status = $result->data->status;
+                    $this->result->errormessage = (string) $result->errormessage;
                 }
             }
         }
-
+        
         // When the normal response parser should be used.
         if ($defaultParser) {
             return $this->parseResponse($this->result);
@@ -245,7 +255,7 @@ class Mailcamp
         $response = json_decode(json_encode((object) $response), false);
 
         // Throw an error when a request has failed.
-        if ($response->status === false) {
+        if (!$response->success) {
             if (is_string($response->errormessage)) {
                 throw new MailcampException($response->errormessage);
             }
@@ -270,9 +280,9 @@ class Mailcamp
     {
         // Convert array into object.
         $response = json_decode(json_encode((object) $response), false);
-
+        
         // When an emailaddress is not yet subscribed.
-        if ($response->status === 'FAILED') {
+        if ($response->status == 'FAILED') {
             return false;
         }
 
