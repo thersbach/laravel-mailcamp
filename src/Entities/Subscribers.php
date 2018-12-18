@@ -2,6 +2,7 @@
 
 namespace Voicecode\Mailcamp\Entities;
 
+use App\Models\User;
 use Voicecode\Mailcamp\Mailcamp;
 
 class Subscribers extends Mailcamp
@@ -86,21 +87,93 @@ class Subscribers extends Mailcamp
     }
 
     /**
-     * Add a contact to a mailing list.
+     * Update an email address of an existing subscriber.
      *
-     * @param int       $id     The ID of the subscriber.
-     * @param string    $email  The email address of the subscriber
+     * @param App\Models\User   $user   The current user.
      */
-    public function update($id, $email)
+    public function updateEmailAddress(User $user)
     {
         // Setup request details.
         $details = '
-            <subscriberids>'.$id.'</subscriberids>
-            <emailaddress>'.$email.'</emailaddress>
+            <subscriberids>'.$user->mailcamp_id.'</subscriberids>
+            <emailaddress>'.$user->email.'</emailaddress>
         ';
 
         // Make request.
         return $this->request($this->requestType, 'UpdateEmailAddress', $details);
+    }
+
+    /**
+     * Update subscriber data.
+     *
+     * @param App\Models\User   $user           The current user.
+     * @param int               $mailingListID  The ID of the maillinglist.
+     */
+    public function update(User $user, $mailingListID)
+    {
+        // Update the subscribers email address.
+        $this->updateEmailAddress($user);
+
+        // Generate gender based on user details.
+        $salutation = (($user->gender == 'o') ? 'heer/mevrouw' : (($user->gender == 'm') ? 'heer' : 'mevrouw'));
+        $newsletter = (($user->newsletter) ? 'true' : 'false');
+        $internalOffers = (($user->internal_offers) ? 'true' : 'false');
+        $externalOffers = (($user->external_offers) ? 'true' : 'false');
+
+        // Setup request details.
+        $details = '
+            <emailaddress>'.$user->email.'</emailaddress>
+            <mailinglist>'.$mailingListID.'</mailinglist>
+            <customfields>
+                <item>
+                    <fieldid>'.config('mailcamp.phoneFieldID').'</fieldid>
+                    <value>'.$salutation.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.firstnameFieldID').'</fieldid>
+                    <value>'.$user->firstname.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.lastnameFieldID').'</fieldid>
+                    <value>'.$user->lastname.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.dateOfBirthFieldID').'</fieldid>
+                    <value>'.$user->date_of_birth->format('d/m/Y').'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.phoneFieldID').'</fieldid>
+                    <value>'.$user->phone.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.newsletterFieldID').'</fieldid>
+                    <value>'.$newsletter.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.internalOffersFieldID').'</fieldid>
+                    <value>'.$internalOffers.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.externalOffersFieldID').'</fieldid>
+                    <value>'.$externalOffers.'</value>
+                </item>                
+                <item>
+                    <fieldid>'.config('mailcamp.countryIsoFieldID').'</fieldid>
+                    <value>'.$user->country->iso.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.genderFieldID').'</fieldid>
+                    <value>'.$user->gender.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.localeFieldID').'</fieldid>
+                    <value>'.$user->locale.'</value>
+                </item>
+            </customfields>
+        ';
+
+        // Make request.
+        return $this->request($this->requestType, 'EditSubscriberCustomFields', $details);
     }
 
     /**
