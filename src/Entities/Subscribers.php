@@ -119,6 +119,7 @@ class Subscribers extends Mailcamp
         $newsletter = (($user->newsletter) ? 'true' : 'false');
         $internalOffers = (($user->internal_offers) ? 'true' : 'false');
         $externalOffers = (($user->external_offers) ? 'true' : 'false');
+        $panelMember = (($user->isPanelMember()) ? 'true' : 'false');
 
         // Setup request details.
         $details = '
@@ -168,6 +169,10 @@ class Subscribers extends Mailcamp
                 <item>
                     <fieldid>'.config('mailcamp.localeFieldID').'</fieldid>
                     <value>'.$user->locale.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.panelMemberFieldID').'</fieldid>
+                    <value>'.$panelMember.'</value>
                 </item>
             </customfields>
         ';
