@@ -127,8 +127,12 @@ class Subscribers extends Mailcamp
             <mailinglist>'.$mailingListID.'</mailinglist>
             <customfields>
                 <item>
-                    <fieldid>'.config('mailcamp.phoneFieldID').'</fieldid>
+                    <fieldid>'.config('mailcamp.salutationFieldID').'</fieldid>
                     <value>'.$salutation.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.phoneFieldID').'</fieldid>
+                    <value>'.$user->phone.'</value>
                 </item>
                 <item>
                     <fieldid>'.config('mailcamp.firstnameFieldID').'</fieldid>
