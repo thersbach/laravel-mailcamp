@@ -35,7 +35,7 @@ class Subscribers extends Mailcamp
         ';
 
         // Make request.
-        return $this->request($this->requestType, 'IsSubscriberOnList', $details, false);
+        return $this->request($this->requestType, 'IsSubscriberOnList', $details);
     }
 
     /**
@@ -46,20 +46,16 @@ class Subscribers extends Mailcamp
      */
     public function subscribe($email, $listID, $confirmed = true, $format = 'html')
     {
-        // When the user is not subscribed yet.
-        if (!$this->isSubscribed($email, $listID)) {
-                        
-            // Setup request details.
-            $details = '
-                <emailaddress>'.$email.'</emailaddress>
-                <mailinglist>'.$listID.'</mailinglist>
-                <confirmed>'.$confirmed.'</confirmed>
-                <format>'.$format.'</format>
-            ';
+        // Setup request details.
+        $details = '
+            <emailaddress>'.$email.'</emailaddress>
+            <mailinglist>'.$listID.'</mailinglist>
+            <confirmed>'.$confirmed.'</confirmed>
+            <format>'.$format.'</format>
+        ';
 
-            // Make request.
-            return $this->request($this->requestType, 'AddSubscriberToList', $details);
-        }
+        // Make request.
+        return $this->request($this->requestType, 'AddSubscriberToList', $details);
     }
 
     /**
@@ -71,19 +67,15 @@ class Subscribers extends Mailcamp
      */
     public function unsubscribe($email, $listID)
     {
-        // When the user is subscribed.
-        if ($this->isSubscribed($email, $listID)) {
+        // Setup request details.
+        $details = '
+            <emailaddress>'.$email.'</emailaddress>
+            <listid>'.$listID.'</listid>
+            <subscriberid />
+        ';
 
-            // Setup request details.
-            $details = '
-                <emailaddress>'.$email.'</emailaddress>
-                <listid>'.$listID.'</listid>
-                <subscriberid />
-            ';
-
-            // Make request.
-            return $this->request($this->requestType, 'DeleteSubscriber', $details);
-        }
+        // Make request.
+        return $this->request($this->requestType, 'DeleteSubscriber', $details);
     }
 
     /**
@@ -127,8 +119,12 @@ class Subscribers extends Mailcamp
             <mailinglist>'.$mailingListID.'</mailinglist>
             <customfields>
                 <item>
-                    <fieldid>'.config('mailcamp.phoneFieldID').'</fieldid>
+                    <fieldid>'.config('mailcamp.salutationFieldID').'</fieldid>
                     <value>'.$salutation.'</value>
+                </item>
+                <item>
+                    <fieldid>'.config('mailcamp.phoneFieldID').'</fieldid>
+                    <value>'.$user->phone.'</value>
                 </item>
                 <item>
                     <fieldid>'.config('mailcamp.firstnameFieldID').'</fieldid>
