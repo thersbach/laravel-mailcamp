@@ -211,14 +211,8 @@ class Mailcamp
                 }
             }
         }
-        
-        // When the normal response parser should be used.
-        if ($defaultParser) {
-            return $this->parseResponse($this->result);
-        }
 
-        // In some cases, a different response parser should be used.
-        return $this->parseAlternateResponse($this->result);
+        return $this->parseResponse($this->result);
     }
 
     /**
@@ -265,30 +259,7 @@ class Mailcamp
 
         return $response;
     }
-
-    /**
-     * Alternate response parser.
-     *
-     * This response parser is used for parsing the response of the isSubscribed API call.
-     * The response would return "FAILED" when a email address is not subscribed to a certain mailing list.
-     *
-     * @param array $response  The response returned after an API call.
-     *
-     * @return boolean
-     */
-    protected function parseAlternateResponse($response)
-    {
-        // Convert array into object.
-        $response = json_decode(json_encode((object) $response), false);
-        
-        // When an emailaddress is not yet subscribed.
-        if ($response->status == 'FAILED') {
-            return false;
-        }
-
-        return true;
-    }
-
+    
     /**
      * Check if all config variables are available.
      */
