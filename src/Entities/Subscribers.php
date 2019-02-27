@@ -178,6 +178,10 @@ class Subscribers extends Mailcamp
                     <fieldid>'.config('mailcamp.panelMemberFieldID').'</fieldid>
                     <value>'.$panelMember.'</value>
                 </item>
+                <item>
+                    <fieldid>'.config('mailcamp.lastLoginFieldID').'</fieldid>
+                    <value>'.$user->logged_in_at->format('d-m-Y').'</value>
+                </item>
             </customfields>
         ';
 
