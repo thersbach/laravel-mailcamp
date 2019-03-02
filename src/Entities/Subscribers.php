@@ -172,7 +172,7 @@ class Subscribers extends Mailcamp
                 </item>
                 <item>
                     <fieldid>'.config('mailcamp.lastLoginFieldID').'</fieldid>
-                    <value>'.$user->logged_in_at->format('d-m-Y').'</value>
+                    <value>'.((!is_null($user->logged_in_at)) ? $user->logged_in_at->format('d-m-Y') : null).'</value>
                 </item>
             </customfields>
         ';
