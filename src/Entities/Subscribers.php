@@ -156,7 +156,7 @@ class Subscribers extends Mailcamp
                 </item>                
                 <item>
                     <fieldid>'.config('mailcamp.countryIsoFieldID').'</fieldid>
-                    <value>'.$user->country->iso.'</value>
+                    <value>'.((!is_null($user->country)) ? $user->country->iso : null).'</value>
                 </item>
                 <item>
                     <fieldid>'.config('mailcamp.genderFieldID').'</fieldid>
