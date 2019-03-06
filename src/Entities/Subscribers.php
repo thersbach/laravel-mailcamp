@@ -103,82 +103,11 @@ class Subscribers extends Mailcamp
      */
     public function update(User $user, $mailingListID)
     {
-        // Update the subscribers email address.
-        $this->updateEmailAddress($user);
-
-        // Generate gender based on user details.
-        $salutation = (($user->gender == 'o') ? 'heer/mevrouw' : (($user->gender == 'm') ? 'heer' : 'mevrouw'));
-        $newsletter = (($user->newsletter) ? 'true' : 'false');
-        $internalOffers = (($user->internal_offers) ? 'true' : 'false');
-        $externalOffers = (($user->external_offers) ? 'true' : 'false');
-        $panelMember = (($user->isPanelMember()) ? 'true' : 'false');
-
         // Setup request details.
         $details = '
             <emailaddress>'.$user->email.'</emailaddress>
             <mailinglist>'.$mailingListID.'</mailinglist>
-            <customfields>
-                <item>
-                    <fieldid>'.config('mailcamp.salutationFieldID').'</fieldid>
-                    <value>'.$salutation.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.phoneFieldID').'</fieldid>
-                    <value>'.$user->phone.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.firstnameFieldID').'</fieldid>
-                    <value>'.$user->firstname.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.lastnameFieldID').'</fieldid>
-                    <value>'.$user->lastname.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.dateOfBirthFieldID').'</fieldid>
-                    <value>'.$user->date_of_birth->format('d/m/Y').'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.phoneFieldID').'</fieldid>
-                    <value>'.$user->phone.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.newsletterFieldID').'</fieldid>
-                    <value>'.$newsletter.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.internalOffersFieldID').'</fieldid>
-                    <value>'.$internalOffers.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.externalOffersFieldID').'</fieldid>
-                    <value>'.$externalOffers.'</value>
-                </item>                
-                <item>
-                    <fieldid>'.config('mailcamp.countryIsoFieldID').'</fieldid>
-                    <value>'.((!is_null($user->country)) ? $user->country->iso : null).'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.genderFieldID').'</fieldid>
-                    <value>'.$user->gender.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.localeFieldID').'</fieldid>
-                    <value>'.$user->locale.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.panelMemberFieldID').'</fieldid>
-                    <value>'.$panelMember.'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.lastLoginFieldID').'</fieldid>
-                    <value>'.((!is_null($user->logged_in_at)) ? $user->logged_in_at->format('d-m-Y') : null).'</value>
-                </item>
-                <item>
-                    <fieldid>'.config('mailcamp.environmentFieldID').'</fieldid>
-                    <value>'.app()->environment().'</value>
-                </item>
-            </customfields>
+            <customfields></customfields>
         ';
 
         // Make request.
