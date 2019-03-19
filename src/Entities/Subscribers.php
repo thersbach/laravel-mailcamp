@@ -59,13 +59,32 @@ class Subscribers extends Mailcamp
     }
 
     /**
-     * Remove a contact from a mailing list.
+     * Unsubscribe a contact from a mailing list.
      *
      * @param string    $email      The email address of the subscriber
      * @param int       $listID     The ID of the mailing list.
      *
      */
     public function unsubscribe($email, $listID)
+    {
+        // Setup request details.
+        $details = '
+            <emailaddress>'.$email.'</emailaddress>
+            <listid>'.$listID.'</listid>
+        ';
+
+        // Make request.
+        return $this->request('subscribers', 'UnsubscribeSubscriber', $details);
+    }
+
+    /**
+     * Delete a contact from a mailing list.
+     *
+     * @param string    $email      The email address of the subscriber
+     * @param int       $listID     The ID of the mailing list.
+     *
+     */
+    public function delete($email, $listID)
     {
         // Setup request details.
         $details = '
