@@ -19,10 +19,11 @@ API tokens can't be created in their demo environment, so you'll have to contact
 - Get the details of a specific list
 
 ## Subscribers
-- Create a new subscriber for a list
+- Subscribe a new contact to a list
 - Check if an email address is subscribed to a list
-- Update the email address of a subscriber
-- Delete a subscriber from a list
+- Update the email address of a contact
+- Delete a contact
+- Unsubscribe a contact from a list
 
 ## Stats
 - Get statistics
