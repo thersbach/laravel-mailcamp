@@ -250,8 +250,10 @@ class Mailcamp
 
         // Throw an error when a request has failed.
         if (!$response->success) {
-            if (is_string($response->errormessage)) {
+            if (isset($response->errormessage) && is_string($response->errormessage)) {
                 throw new MailcampException($response->errormessage);
+            } elseif (isset($response->data)) {
+                throw new MailcampException($response->data);
             }
             
             throw new MailcampException('Received an unknown or empty error response from Mailcamp.');
