@@ -176,7 +176,6 @@ class Mailcamp
         if (! ini_get('safe_mode') && ini_get('open_basedir') == '') {
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         }
-        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         curl_setopt($ch, CURLOPT_POSTFIELDS, 'xml=' . $this->xml);
 
         // Execute the request.
