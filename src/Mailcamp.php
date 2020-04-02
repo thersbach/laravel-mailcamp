@@ -2,23 +2,25 @@
 
 namespace Voicecode\Mailcamp;
 
-use Voicecode\Mailcamp\Entities\Send;
-use Voicecode\Mailcamp\Entities\Lists;
-use Voicecode\Mailcamp\Entities\Stats;
-use Voicecode\Mailcamp\Entities\Token;
-use Voicecode\Mailcamp\Entities\Bounce;
-use Voicecode\Mailcamp\Entities\Segment;
-use Voicecode\Mailcamp\Entities\Settings;
-use Voicecode\Mailcamp\Entities\Templates;
-use Voicecode\Mailcamp\Entities\Newsletters;
-use Voicecode\Mailcamp\Entities\Subscribers;
-use Voicecode\Mailcamp\Entities\CustomFields;
 use Voicecode\Mailcamp\Entities\Autoresponders;
+use Voicecode\Mailcamp\Entities\Bounce;
+use Voicecode\Mailcamp\Entities\CustomFields;
+use Voicecode\Mailcamp\Entities\Lists;
+use Voicecode\Mailcamp\Entities\Newsletters;
+use Voicecode\Mailcamp\Entities\Segment;
+use Voicecode\Mailcamp\Entities\Send;
+use Voicecode\Mailcamp\Entities\Settings;
+use Voicecode\Mailcamp\Entities\Stats;
+use Voicecode\Mailcamp\Entities\Subscribers;
+use Voicecode\Mailcamp\Entities\Templates;
+use Voicecode\Mailcamp\Entities\Token;
 
 class Mailcamp
 {
     protected $config;
+
     protected $result;
+
     protected $xml;
 
     /**
@@ -152,14 +154,14 @@ class Mailcamp
     {
         return new Token();
     }
-    
+
     /**
      * Make a request to the Mailcamp API.
      *
      * @param string $type              The request type.
      * @param string $method            The method of the request.
      * @param string $details           The XML body of the request.
-     * @param boolean $defaultParser    In some cases an alternate response parser would be necessary.
+     * @param bool $defaultParser    In some cases an alternate response parser would be necessary.
      */
     public function request($type, $method, $details, $defaultParser = true)
     {
@@ -176,7 +178,7 @@ class Mailcamp
         if (! ini_get('safe_mode') && ini_get('open_basedir') == '') {
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         }
-        curl_setopt($ch, CURLOPT_POSTFIELDS, 'xml=' . $this->xml);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, 'xml='.urlencode($this->xml));
 
         // Execute the request.
         $response = curl_exec($ch);
@@ -188,7 +190,7 @@ class Mailcamp
             $this->result->data = curl_error($ch);
         } else {
             $result = @simplexml_load_string($response);
-            
+
             if ($result) {
                 // When response from isSubscribed.
                 if ($result->status == 'FAILED') {
@@ -234,7 +236,7 @@ class Mailcamp
             </details>
         </xmlrequest>';
     }
-    
+
     /**
      * Default response parser.
      *
@@ -248,36 +250,36 @@ class Mailcamp
         $response = json_decode(json_encode((object) $response), false);
 
         // Throw an error when a request has failed.
-        if (!$response->success) {
+        if (! $response->success) {
             if (isset($response->errormessage) && is_string($response->errormessage)) {
                 throw new MailcampException($response->errormessage);
             } elseif (isset($response->data)) {
                 throw new MailcampException($response->data);
             }
-            
+
             throw new MailcampException('Received an unknown or empty error response from Mailcamp.');
         }
 
         return $response;
     }
-    
+
     /**
      * Check if all config variables are available.
      */
     private function validateConfig()
     {
         // Throw error when username is missing from the config files.
-        if (!config('mailcamp.username')) {
+        if (! config('mailcamp.username')) {
             throw new MailcampException('Mailcamp API error: No username is specified for connecting with Mailcamp.');
         }
 
         // Throw error when token is missing from the config files.
-        if (!config('mailcamp.token')) {
+        if (! config('mailcamp.token')) {
             throw new MailcampException('Mailcamp API error: No token is specified for connecting with Mailcamp.');
         }
-        
+
         // Throw error when endpoint is missing from the config files.
-        if (!config('mailcamp.endpoint')) {
+        if (! config('mailcamp.endpoint')) {
             throw new MailcampException('Mailcamp API error: No endpoint is specified for connecting with Mailcamp.');
         }
 
