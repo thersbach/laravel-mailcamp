@@ -44,15 +44,21 @@ class Subscribers extends Mailcamp
      * @param string    $email      The email address of the subscriber.
      * @param int       $listID     The ID of the mailing list.
      */
-    public function subscribe($email, $listID, $confirmed = true, $format = 'html')
+    public function subscribe($email, $listID, $confirmed = true, $customFields = [])
     {
         // Setup request details.
         $details = '
-            <emailaddress>'.$email.'</emailaddress>
-            <mailinglist>'.$listID.'</mailinglist>
-            <confirmed>'.$confirmed.'</confirmed>
-            <format>'.$format.'</format>
-        ';
+            <emailaddress>' . $email . '</emailaddress>
+            <mailinglist>' . $listID . '</mailinglist>
+            <confirmed>' . ($confirmed ? 'yes' : 'no') . '</confirmed>
+            <customfields>' .
+                join(array_map(function($id, $value) {
+                    return '<item>
+                                <fieldid>' . $id . '</fieldid>
+                                <value>' . $value . '</value>
+                            </item>';
+                }, array_keys($customFields), $customFields)) .
+            '</customfields>';
 
         // Make request.
         return $this->request($this->requestType, 'AddSubscriberToList', $details);
