@@ -202,7 +202,7 @@ class Mailcamp
                 elseif (isset($result->data)) {
                     $this->result->success = true;
                     $this->result->status = $result->data->status;
-                    $this->result->data = (string) $result->data;
+                    $this->result->data = $result->data;
                 }
                 // Else
                 if ($result->status != 'FAILED' && isset($result->errormessage)) {
